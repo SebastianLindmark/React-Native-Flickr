@@ -1,6 +1,6 @@
 import ImageSource from './ImageSource'
 import { WebImage, WebImageResult } from '../components/WebResult';
-import {InvalidApiKeyError,TimeoutError} from '../errors/CustomErrors'
+import { InvalidApiKeyError, TimeoutError } from '../errors/CustomErrors'
 
 export interface FlickrPhoto {
     id: number,
@@ -32,7 +32,7 @@ const constructImageUrl = (photo: FlickrPhoto): string => {
     return `http://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`
 }
 
-const timedoutFetch = (url: string, ms : number ) : Promise<any> => {
+const timedoutFetch = (url: string, ms: number): Promise<any> => {
 
     const timeOut = new Promise((resolve, reject) => setTimeout(() => { reject(new TimeoutError('Request timed out')) }, ms));
     return Promise.race([
@@ -41,21 +41,22 @@ const timedoutFetch = (url: string, ms : number ) : Promise<any> => {
     ]);
 }
 
+const parseJsonResponse = (json: any): WebImageResult => {
+    const flickrResult = (json.photos as FlickrPhotoResult)
+    const images = flickrResult.photo
+        .map(constructImageUrl)
+        .map(url => new WebImage(url))
+
+    return new WebImageResult(images, flickrResult.page);
+}
+
 const fetchImages = (category: string, offset: number): Promise<WebImageResult> => {
 
     return fetchApiKey()
         .then(apiKey => timedoutFetch(constructBaseUrl(apiKey, category, offset), requestTimeoutMillis))
         .then(checkResponse)
-        .then(json => {
-
-            const flickrResult = (json.photos as FlickrPhotoResult)
-            const images = flickrResult.photo
-                .map(constructImageUrl)
-                .map(url => new WebImage(url))
-
-            return new WebImageResult(images, flickrResult.page);
-
-        }).catch(err => {
+        .then(parseJsonResponse)
+        .catch(err => {
             console.log(err.message);
             throw err;
         })

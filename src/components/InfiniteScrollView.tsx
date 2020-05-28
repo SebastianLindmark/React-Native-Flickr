@@ -9,9 +9,9 @@ interface Props {
 
 }
 
-const EndlessScrollView = (props: Props) => {
+const InfiniteScrollView: React.FC<Props> = props => {
 
-    const checkAtBottom = (height : number, contentOffset : number, contentSize : number) => {
+    const checkAtBottom = (height: number, contentOffset: number, contentSize: number) => {
 
         const paddingToBottom = props.paddingToBottom || 100;
         const atBottom = height + contentOffset >= contentSize - paddingToBottom;
@@ -24,18 +24,17 @@ const EndlessScrollView = (props: Props) => {
     const onScrollEventFrequencyMillis = 100;
 
     return (
-        <ScrollView scrollEventThrottle={onScrollEventFrequencyMillis} onScroll={(scrollEvent) => {
+        <ScrollView scrollEventThrottle={onScrollEventFrequencyMillis} onScroll={(scrollEvent) =>
 
-            checkAtBottom(scrollEvent.nativeEvent.layoutMeasurement.height, 
-                        scrollEvent.nativeEvent.contentOffset.y,
-                        scrollEvent.nativeEvent.contentSize.height
-            )
-
-        }}>
+            checkAtBottom(scrollEvent.nativeEvent.layoutMeasurement.height,
+                scrollEvent.nativeEvent.contentOffset.y,
+                scrollEvent.nativeEvent.contentSize.height)}>
+                    
             {props.children}
+
         </ScrollView>
 
     )
 }
 
-export default EndlessScrollView;
+export default InfiniteScrollView;

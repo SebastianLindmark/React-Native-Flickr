@@ -52,10 +52,10 @@ const GalleryScreen: React.FC<Props> = props => {
             setIsLoading(false);
 
         }).catch(err => {
-            
-            if(err instanceof TimeoutError ||err instanceof InvalidApiKeyError){
+
+            if (err instanceof TimeoutError || err instanceof InvalidApiKeyError) {
                 setError(err.message);
-            }else{
+            } else {
                 setError("Unable to fetch images");
             }
         }).finally(() => setIsLoading(false));

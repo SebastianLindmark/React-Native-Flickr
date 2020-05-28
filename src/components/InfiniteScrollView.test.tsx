@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper, mount, ReactWrapper, render } from 'enzyme';
 import React from 'react';
 import { View, ScrollView, Text } from 'react-native';
-import EndlessScrollView from './EndlessScrollView';
+import InfiniteScrollView from './InfiniteScrollView';
 
 
 const createScrollAtBottomEvent = () => {
@@ -30,7 +30,7 @@ describe("App", () => {
     let onScrollBottom: jest.Mock;
 
     const getRenderedComponent = (padding?: number): ShallowWrapper => {
-      return shallow(<EndlessScrollView children={[]} onBottomReached={onScrollBottom} paddingToBottom={padding} />);
+      return shallow(<InfiniteScrollView children={[]} onBottomReached={onScrollBottom} paddingToBottom={padding} />);
     };
 
     beforeEach(() => {
@@ -38,12 +38,14 @@ describe("App", () => {
     });
 
     it("should render a <ScrollView />", () => {
+
       const wrapper = getRenderedComponent();
 
       expect(wrapper.find(ScrollView)).toHaveLength(1);
     });
 
     it("should call onScrollBottom", () => {
+
       const wrapper = getRenderedComponent();
 
       let scrollEvent = wrapper.find(ScrollView).prop('onScroll') as Function;
@@ -52,6 +54,7 @@ describe("App", () => {
     });
 
     it("should not call onScrollBottom", () => {
+
       const wrapper = getRenderedComponent();
 
       let scrollEvent = wrapper.find(ScrollView).prop('onScroll') as Function;
@@ -60,6 +63,7 @@ describe("App", () => {
     });
 
     it("should call onScrollBottom with padding", () => {
+
       const scrollViewBottomPadding = 100;
       const wrapper = getRenderedComponent(scrollViewBottomPadding);
 
@@ -70,6 +74,7 @@ describe("App", () => {
     });
 
     it("should call not onScrollBottom with padding", () => {
+
       const scrollViewBottomPadding = 50;
       const wrapper = getRenderedComponent(scrollViewBottomPadding);
 
