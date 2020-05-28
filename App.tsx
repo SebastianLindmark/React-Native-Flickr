@@ -1,25 +1,23 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, StatusBar , View } from 'react-native';
 
-import GalleryImage from './GalleryImage';
-import Gallery from './Gallery';
+import GalleryScreen from './src/containers/GalleryScreen';
 
-import {FlickrPhotoResult, FlickrPhoto} from './FlickrPhotoResult'
-
-import FlickrImageSource from './FlickrImageSource'
-
+import FlickrImageSource from './src/network/FlickrImageSource'
 
 
 export default function App() {
 
+    const containerStyle = {...styles.container, marginTop : StatusBar.currentHeight };
+
+
     return (
-    <View style={styles.container}>
-
-        <Gallery category={'dogs'} imageSource ={FlickrImageSource}  /> 
-
+    <View style={containerStyle}>
+        <GalleryScreen category={'dogs'} imageSource ={FlickrImageSource}  /> 
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

@@ -1,5 +1,23 @@
 import ImageSource from './ImageSource'
-import { FlickrPhotoResult, FlickrPhoto } from './FlickrPhotoResult'
+import { WebImage, WebImageResult } from '../components/WebResult';
+
+
+export interface FlickrPhoto {
+    id : number,
+    owner : string,
+    title : string,
+    farm : number,
+    secret : string,
+    server : string,
+    url : string
+  }
+
+export interface FlickrPhotoResult {
+    page : number,
+    pages : number,
+    photo : FlickrPhoto[]
+}
+
 
 
 const fetchApiKey = (): Promise<string> => {
@@ -7,24 +25,30 @@ const fetchApiKey = (): Promise<string> => {
 }
 
 const constructBaseUrl = (apiKey: string, category: string, offset: number): string => {
-
     return `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${category}&privacy_filter=1&safe_search=1&content_type=1&per_page=20&page=${offset}&format=json&nojsoncallback=1`;
+}
+
+const constructGetSizesUrl = (apiKey : string, photoId: number) => {
+    return `https://www.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=${apiKey}&photo_id=${photoId}&format=json&nojsoncallback=1`
 }
 
 const constructImageUrl = (photo: FlickrPhoto): string => {
     return `http://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`
 }
 
-const fetchImages = (category: string, offset: number): Promise<FlickrPhotoResult> => {
+const fetchImages = (category: string, offset: number): Promise<WebImageResult> => {
 
     return fetchApiKey()
         .then(apiKey => fetch(constructBaseUrl(apiKey, category, offset)))
         .then(checkResponse)
         .then(json => {
             
-            const result: FlickrPhotoResult = json.photos;
-            result.photo.map(photo => photo.url = constructImageUrl(photo))
-            return result
+            const flickrResult = (json.photos as FlickrPhotoResult)
+            const images = flickrResult.photo
+            .map(constructImageUrl)
+            .map(url => new WebImage(url))
+
+            return new WebImageResult(images, flickrResult.page);
 
         }).catch(err => {
             console.error(err.message);
