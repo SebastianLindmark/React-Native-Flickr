@@ -4,6 +4,7 @@ import { Alert, ActivityIndicator, View, StyleSheet } from 'react-native'
 import { WebImageResult } from '../components/WebResult'
 import ImageSource from '../network/ImageSource';
 import GalleryViewer from '../components/GalleryViewer';
+import { TimeoutError, InvalidApiKeyError } from '../errors/CustomErrors';
 
 interface Props {
     imageSource: ImageSource,
@@ -28,7 +29,7 @@ const GalleryScreen: React.FC<Props> = props => {
     useEffect(() => {
         fetchImages(props.category, imageResult.offset);
         return () => { isMounted.current = false };
-    }, [props.imageSource])
+    }, [props.category, props.imageSource])
 
 
     const fetchImages = (category: string, offset: number) => {
@@ -39,7 +40,7 @@ const GalleryScreen: React.FC<Props> = props => {
         return props.imageSource.fetchImages(category, offset).then(result => {
             if (isMounted.current) {
 
-                setImageResult((prevState : WebImageResult) : WebImageResult => {
+                setImageResult((prevState: WebImageResult): WebImageResult => {
                     return {
                         ...prevState,
                         images: prevState.images.concat(result.images),
@@ -51,11 +52,14 @@ const GalleryScreen: React.FC<Props> = props => {
             setIsLoading(false);
 
         }).catch(err => {
-            setError("Unable to fetch images");
-            console.error(err);
+            
+            if(err instanceof TimeoutError ||err instanceof InvalidApiKeyError){
+                setError(err.message);
+            }else{
+                setError("Unable to fetch images");
+            }
         })
     };
-
 
 
     const onScrollBottom = () => {
@@ -65,15 +69,12 @@ const GalleryScreen: React.FC<Props> = props => {
     }
 
     return (
-        
-        <View>            
 
+        <View>
             <View style={styles.centered}>
-                {isLoading && (<ActivityIndicator size="large" />)} 
+                {isLoading && (<ActivityIndicator size="large" />)}
             </View>
-
-            <GalleryViewer images={imageResult.images} onScrollBottom={onScrollBottom}  />
-            
+            <GalleryViewer images={imageResult.images} onScrollBottom={onScrollBottom} />
         </View>
     );
 
@@ -89,8 +90,8 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         position: 'absolute',
-        
-      }
+
+    }
 })
 
 export default GalleryScreen;

@@ -1,21 +1,21 @@
 import ImageSource from './ImageSource'
 import { WebImage, WebImageResult } from '../components/WebResult';
-
+import {InvalidApiKeyError,TimeoutError} from '../errors/CustomErrors'
 
 export interface FlickrPhoto {
-    id : number,
-    owner : string,
-    title : string,
-    farm : number,
-    secret : string,
-    server : string,
-    url : string
-  }
+    id: number,
+    owner: string,
+    title: string,
+    farm: number,
+    secret: string,
+    server: string,
+    url: string
+}
 
 export interface FlickrPhotoResult {
-    page : number,
-    pages : number,
-    photo : FlickrPhoto[]
+    page: number,
+    pages: number,
+    photo: FlickrPhoto[]
 }
 
 
@@ -28,25 +28,30 @@ const constructBaseUrl = (apiKey: string, category: string, offset: number): str
     return `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${category}&privacy_filter=1&safe_search=1&content_type=1&per_page=20&page=${offset}&format=json&nojsoncallback=1`;
 }
 
-const constructGetSizesUrl = (apiKey : string, photoId: number) => {
-    return `https://www.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=${apiKey}&photo_id=${photoId}&format=json&nojsoncallback=1`
-}
-
 const constructImageUrl = (photo: FlickrPhoto): string => {
     return `http://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`
+}
+
+const timedoutFetch = (url: string, ms : number ) : Promise<any> => {
+
+    const timeOut = new Promise((resolve, reject) => setTimeout(() => { reject(new TimeoutError('Request timed out')) }, ms));
+    return Promise.race([
+        fetch(url),
+        timeOut
+    ]);
 }
 
 const fetchImages = (category: string, offset: number): Promise<WebImageResult> => {
 
     return fetchApiKey()
-        .then(apiKey => fetch(constructBaseUrl(apiKey, category, offset)))
+        .then(apiKey => timedoutFetch(constructBaseUrl(apiKey, category, offset), 5000))
         .then(checkResponse)
         .then(json => {
-            
+
             const flickrResult = (json.photos as FlickrPhotoResult)
             const images = flickrResult.photo
-            .map(constructImageUrl)
-            .map(url => new WebImage(url))
+                .map(constructImageUrl)
+                .map(url => new WebImage(url))
 
             return new WebImageResult(images, flickrResult.page);
 
@@ -56,25 +61,21 @@ const fetchImages = (category: string, offset: number): Promise<WebImageResult> 
         })
 }
 
-const checkResponse = (response: Response) : Promise<any> => {
-    
-    if(!response.ok){
+const checkResponse = (response: Response): Promise<any> => {
+
+    if (!response.ok) {
         Promise.reject("Unable to fetch images: " + response.text());
     }
 
     return response.json()
-    .then(json => {
-        if(json.code == 100){
-            return Promise.reject(new Error("Expired API key"));
-        }
-        return json;
-    });
-    
-    
+        .then(json => {
+            if (json.code == 100) {
+                return Promise.reject(new InvalidApiKeyError("Expired API key"));
+            }
+            return json;
+        });
+
 }
 
+export default { fetchImages: fetchImages } as ImageSource;
 
-
-let implementation = {} as ImageSource;
-implementation.fetchImages = fetchImages;
-export default implementation;

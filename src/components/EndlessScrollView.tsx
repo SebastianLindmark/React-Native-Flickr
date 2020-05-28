@@ -13,10 +13,6 @@ const EndlessScrollView = (props: Props) => {
 
     const checkAtBottom = (height : number, contentOffset : number, contentSize : number) => {
 
-        //100 150, 200
-
-        //100 + 150 >= 200 - 50
-
         const paddingToBottom = props.paddingToBottom || 100;
         const atBottom = height + contentOffset >= contentSize - paddingToBottom;
 
