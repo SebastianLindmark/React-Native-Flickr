@@ -18,7 +18,7 @@ export interface FlickrPhotoResult {
     photo: FlickrPhoto[]
 }
 
-
+const requestTimeoutMillis = 10000;
 
 const fetchApiKey = (): Promise<string> => {
     return Promise.resolve("de2bb026d615a8dee6975bdaafaf767b"); //Should be fetched from server
@@ -44,7 +44,7 @@ const timedoutFetch = (url: string, ms : number ) : Promise<any> => {
 const fetchImages = (category: string, offset: number): Promise<WebImageResult> => {
 
     return fetchApiKey()
-        .then(apiKey => timedoutFetch(constructBaseUrl(apiKey, category, offset), 5000))
+        .then(apiKey => timedoutFetch(constructBaseUrl(apiKey, category, offset), requestTimeoutMillis))
         .then(checkResponse)
         .then(json => {
 
@@ -56,7 +56,7 @@ const fetchImages = (category: string, offset: number): Promise<WebImageResult> 
             return new WebImageResult(images, flickrResult.page);
 
         }).catch(err => {
-            console.error(err.message);
+            console.log(err.message);
             throw err;
         })
 }

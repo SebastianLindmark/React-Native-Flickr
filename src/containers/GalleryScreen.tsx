@@ -58,7 +58,7 @@ const GalleryScreen: React.FC<Props> = props => {
             }else{
                 setError("Unable to fetch images");
             }
-        })
+        }).finally(() => setIsLoading(false));
     };
 
 
