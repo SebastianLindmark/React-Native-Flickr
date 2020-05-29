@@ -1,9 +1,9 @@
 # Flickr Gallery Application in React Native
 
-A small application for browsing images from the public flickr library.
+A small application for browsing images from the public flickr API.
 
 ## Intro
-This application was made using the 'Expo' toolchain. The application fetches images from flickr and automatically fetches new images.
+This application was made using the 'Expo' toolchain. The application fetches images from flickr. The endless scrollview is automatically fetching new images.
 
 ## Setup
 
@@ -11,6 +11,7 @@ Requirements
 * Node.js and npm
 ## Installation
 
+Run the following command to setup the environment
 ```
 npm install -g expo-cli
 ```
