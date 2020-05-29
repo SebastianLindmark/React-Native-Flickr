@@ -1,5 +1,6 @@
 import React from 'react';
-import { Image, View } from 'react-native'
+import { Image } from 'react-native'
+
 
 
 interface Props {
@@ -8,7 +9,6 @@ interface Props {
     url: string
 }
 
-
 const GalleryImage: React.FC<Props> = props => {
 
     return (
@@ -16,7 +16,6 @@ const GalleryImage: React.FC<Props> = props => {
             style={{ width: props.width, height: props.height }}
             source={{ uri: props.url }} />
     )
-
 };
 
 export default GalleryImage

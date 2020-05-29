@@ -27,3 +27,6 @@ npm run
 npm test
 ```
 
+## Improvements when time permits
+* Unit tests need to be extended
+* Dynamic search input box

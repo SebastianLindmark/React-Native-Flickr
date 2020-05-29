@@ -1,55 +1,51 @@
 import React, { useLayoutEffect, useState, useCallback } from 'react';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import {Platform, Dimensions, View, StyleSheet, LayoutChangeEvent } from 'react-native';
 import InfiniteScrollView from "./InfiniteScrollView";
 import { WebImage } from './WebResult';
 import GalleryImage from './GalleryImage';
+import useLayoutChange from '../containers/useLayoutChange'
+
 
 interface Props {
     images: WebImage[],
     onScrollBottom: Function
 }
 
-
-const calculateImageDimensions = () => {
-    const screenWidth = Math.round(Dimensions.get('window').width);
-    const screenHeight = Math.round(Dimensions.get('window').height);
-
-    let width: number, height: number;
-
-    if (screenHeight > screenWidth) {
-        width = screenWidth / 3;
-        height = screenHeight / 4;
-    } else {
-        width = screenWidth / 4;
-        height = screenHeight / 3;
-    }
-    return [width, height];
+const getScreenDimensions = () => {
+    return Dimensions.get('window');
 }
 
-const useLayoutSize = () => {
-    const [width, height] = calculateImageDimensions();
-    const [imageSize, setImageSize] = useState({ width, height });
+const calculateImageDimensions = (screenWidth: number, screenHeight: number) => {
 
-    const onLayout: any = useCallback((event: any) => {
-        const [width, height] = calculateImageDimensions();
-        setImageSize({ width, height });
-    }, [])
+    return screenHeight > screenWidth ? 
+        { imageWidth: screenWidth / 3, imageHeight: screenHeight / 4 } :
+        { imageWidth: screenWidth / 4, imageHeight: screenHeight / 3 }
+}
 
-    return [imageSize, onLayout];
+
+const calculateDeviceImageDimensions = (layoutWidth : number, layoutHeight : number) => {
+    if(Platform.OS !== 'web'){
+        return calculateImageDimensions(layoutWidth, layoutHeight);
+    }else{
+        const screenDimensions = getScreenDimensions();
+        return calculateImageDimensions(screenDimensions.width,screenDimensions.height);
+    }  
 }
 
 const GalleryViewer: React.FC<Props> = props => {
 
-
-    const [imageSize, onLayout] = useLayoutSize();
+    const [layoutDimensions, onLayoutChange] = useLayoutChange(getScreenDimensions());
+    const {imageWidth, imageHeight} = calculateDeviceImageDimensions(layoutDimensions.width, layoutDimensions.height);
 
     return (
 
-        <InfiniteScrollView onBottomReached={props.onScrollBottom}>
-            <View onLayout={onLayout} style={styles.imageContainer}>
-                {props.images.map((image, idx) => <GalleryImage key={idx} url={image.url} width={imageSize.width} height={imageSize.height} />)}
-            </View>
-        </InfiniteScrollView>
+        <View onLayout={onLayoutChange}>
+            <InfiniteScrollView onBottomReached={props.onScrollBottom}>
+                <View style={styles.imageContainer}>
+                    {props.images.map((image, idx) => <GalleryImage key={idx} url={image.url} width={imageWidth} height={imageHeight} />)}
+                </View>
+            </InfiniteScrollView>
+        </View>
     )
 }
 
@@ -58,11 +54,11 @@ const styles = StyleSheet.create({
     imageContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     }
 });
-
 
 
 export default GalleryViewer;

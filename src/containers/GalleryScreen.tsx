@@ -26,6 +26,7 @@ const GalleryScreen: React.FC<Props> = props => {
         }
     }, [error])
 
+    
     useEffect(() => {
         fetchImages(props.category, imageResult.offset);
         return () => { isMounted.current = false };
@@ -58,6 +59,7 @@ const GalleryScreen: React.FC<Props> = props => {
             } else {
                 setError("Unable to fetch images");
             }
+
         }).finally(() => setIsLoading(false));
     };
 

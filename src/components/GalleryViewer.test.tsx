@@ -28,7 +28,7 @@ describe("App", () => {
     });
 
     it('should render multiple <GalleryImage />', () => {
-      expect(wrapper.find(View).prop('children')).toHaveLength(testImages.length);
+      expect(wrapper.find(View).at(1).prop('children')).toHaveLength(testImages.length);
     })
 
   });

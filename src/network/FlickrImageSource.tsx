@@ -25,7 +25,7 @@ const fetchApiKey = (): Promise<string> => {
 }
 
 const constructBaseUrl = (apiKey: string, category: string, offset: number): string => {
-    return `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${category}&privacy_filter=1&safe_search=1&content_type=1&per_page=20&page=${offset}&format=json&nojsoncallback=1`;
+    return `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&text=${category}&privacy_filter=1&safe_search=1&content_type=1&per_page=17&page=${offset}&format=json&nojsoncallback=1`;
 }
 
 const constructImageUrl = (photo: FlickrPhoto): string => {
