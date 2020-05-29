@@ -20,7 +20,6 @@ const createScrollEvent = (height: number, contentOffset: number, contentSize: n
       contentSize: { height: contentSize }
     }
   }
-
 }
 
 describe("App", () => {

@@ -2,34 +2,25 @@ import { shallow, ShallowWrapper, mount, ReactWrapper, render } from 'enzyme';
 import React from 'react';
 import { View } from 'react-native';
 import GalleryViewer from './GalleryViewer';
-import EndlessScrollView from './EndlessScrollView';
+import EndlessScrollView from './InfiniteScrollView';
 import { WebImage } from './WebResult';
 import GalleryImage from './GalleryImage';
 
 
-
 const createImages = (): WebImage[] => {
-
   return Array(5).map(_ => new WebImage('http://test.com'))
-
 }
 
-
-//    images: WebImage[],
-//    onScrollBottom: Function
 
 describe("App", () => {
   describe("rendering", () => {
 
-    const onScrollBottom = jest.fn();
-
-    let wrapper : ShallowWrapper;
-    let props: Object;
+    let wrapper: ShallowWrapper;
 
     const testImages = createImages()
-    
+
     beforeEach(() => {
-      wrapper = shallow(<GalleryViewer images={testImages} onScrollBottom={onScrollBottom} />);
+      wrapper = shallow(<GalleryViewer images={testImages} onScrollBottom={jest.fn()} />);
     });
 
     it("should render a <EndlessScrollView />", () => {

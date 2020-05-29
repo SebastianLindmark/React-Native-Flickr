@@ -28,10 +28,10 @@ const InfiniteScrollView: React.FC<Props> = props => {
 
             checkAtBottom(scrollEvent.nativeEvent.layoutMeasurement.height,
                 scrollEvent.nativeEvent.contentOffset.y,
-                scrollEvent.nativeEvent.contentSize.height)}>
-                    
-            {props.children}
+                scrollEvent.nativeEvent.contentSize.height)
+            }>
 
+            {props.children}
         </ScrollView>
 
     )

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState, useCallback } from 'react';
 import { Dimensions, View, StyleSheet } from 'react-native';
 import InfiniteScrollView from "./InfiniteScrollView";
 import { WebImage } from './WebResult';
@@ -9,8 +9,6 @@ interface Props {
     onScrollBottom: Function
 }
 
-let imageWidth = 0;
-let imageHeight = 0;
 
 const calculateImageDimensions = () => {
     const screenWidth = Math.round(Dimensions.get('window').width);
@@ -25,25 +23,31 @@ const calculateImageDimensions = () => {
         width = screenWidth / 4;
         height = screenHeight / 3;
     }
-    return [width,height];
+    return [width, height];
 }
 
-const bla = () => {
-    imageWidth = window.innerWidth
-    imageHeight = window.innerHeight
+const useLayoutSize = () => {
+    const [width, height] = calculateImageDimensions();
+    const [imageSize, setImageSize] = useState({ width, height });
+
+    const onLayout: any = useCallback((event: any) => {
+        const [width, height] = calculateImageDimensions();
+        setImageSize({ width, height });
+    }, [])
+
+    return [imageSize, onLayout];
 }
 
-const GalleryViewer : React.FC<Props> = props => {
+const GalleryViewer: React.FC<Props> = props => {
 
-    window.addEventListener('resize',bla);
-    const [width,height] = calculateImageDimensions()
-    
+
+    const [imageSize, onLayout] = useLayoutSize();
 
     return (
 
         <InfiniteScrollView onBottomReached={props.onScrollBottom}>
-            <View style={styles.imageContainer}>
-                {props.images.map((image, idx) => <GalleryImage key={idx} url={image.url} width={imageWidth} height={imageHeight} />)}
+            <View onLayout={onLayout} style={styles.imageContainer}>
+                {props.images.map((image, idx) => <GalleryImage key={idx} url={image.url} width={imageSize.width} height={imageSize.height} />)}
             </View>
         </InfiniteScrollView>
     )
