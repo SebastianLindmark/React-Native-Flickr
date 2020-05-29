@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useState, useCallback } from 'react';
-import {Platform, Dimensions, View, StyleSheet, LayoutChangeEvent } from 'react-native';
+import React from 'react';
+import {Platform, Dimensions, View, StyleSheet } from 'react-native';
 import InfiniteScrollView from "./InfiniteScrollView";
 import { WebImage } from './WebResult';
 import GalleryImage from './GalleryImage';

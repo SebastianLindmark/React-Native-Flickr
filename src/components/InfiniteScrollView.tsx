@@ -2,7 +2,6 @@ import React from 'react';
 import { ScrollView } from 'react-native'
 
 
-
 interface Props {
     children: any
     onBottomReached: Function,

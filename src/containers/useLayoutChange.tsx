@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useState, useCallback } from 'react';
-import {Platform, Dimensions, View, StyleSheet, LayoutChangeEvent } from 'react-native';
+import {useState, useCallback } from 'react';
+import {LayoutChangeEvent } from 'react-native';
 
 
 const useLayoutChange = (initialState : any)  => {
