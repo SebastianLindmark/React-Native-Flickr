@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper, mount, ReactWrapper, render } from 'enzyme';
 import React from 'react';
 import { View, ScrollView, Text, FlatList } from 'react-native';
-import InfiniteScrollView from './InfiniteScrollView';
+import InfiniteScrollView from './InfiniteList';
 
 
 const createScrollAtBottomEvent = () => {

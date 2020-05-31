@@ -1,6 +1,6 @@
 import React, { ReactNode, ReactElement, useState } from 'react';
 import { Platform, Dimensions, View, StyleSheet } from 'react-native';
-import InfiniteScrollView from "./InfiniteScrollView";
+import InfiniteList from "./InfiniteList";
 import { WebImage } from './WebResult';
 import GalleryImage from './GalleryImage';
 
@@ -17,7 +17,7 @@ const calculateImageDimensions = ({ width : screenWidth, height : screenHeight}:
         { imageWidth: screenWidth / 4, imageHeight: screenHeight / 3 }
 }
 
-const getNumCols = ({ width : screenWidth , height : screenHeight}: { width: number, height: number }) => {
+const calculateGalleryColumns = ({ width : screenWidth , height : screenHeight}: { width: number, height: number }) => {
     return screenHeight > screenWidth ? 3 : 4;
 }
 
@@ -27,17 +27,11 @@ const getScreenDimensions = () => {
 
 const GalleryViewer: React.FC<Props> = props => {
 
-    const layoutDimensions = getScreenDimensions();
-    const [screenDimensions, setSceenDimensions] = useState(layoutDimensions);
-    const [columnCount, setColumnCount] = useState(getNumCols(layoutDimensions));
-
+    const [screenDimensions, setSceenDimensions] = useState(getScreenDimensions());
 
     const onLayoutHandle = () => {
-        const screenDimensions = getScreenDimensions();
-        setSceenDimensions(screenDimensions);
-        setColumnCount(getNumCols(screenDimensions));
+        setSceenDimensions(getScreenDimensions());
     }
-
 
     const galleryImageRenderer = (child: WebImage): ReactElement => {
 
@@ -47,8 +41,8 @@ const GalleryViewer: React.FC<Props> = props => {
 
     return (
         <View style={styles.container} onLayout={onLayoutHandle}>
-            <InfiniteScrollView refreshOn={screenDimensions}
-                numCols={columnCount}
+            <InfiniteList refreshOn={screenDimensions}
+                numCols={calculateGalleryColumns(screenDimensions)}
                 data={props.images}
                 customRender={galleryImageRenderer}
                 onBottomReached={props.onScrollBottom} />
