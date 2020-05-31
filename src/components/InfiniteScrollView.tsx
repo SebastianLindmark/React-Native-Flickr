@@ -1,11 +1,14 @@
 import React from 'react';
-import { ScrollView } from 'react-native'
+import { FlatList, StyleSheet } from 'react-native'
 
 
 interface Props {
-    children: any
+    data: any,
+    customRender: any
     onBottomReached: Function,
     paddingToBottom?: number
+    numCols? : number
+    refreshOn : any
 }
 
 const InfiniteScrollView: React.FC<Props> = props => {
@@ -21,20 +24,29 @@ const InfiniteScrollView: React.FC<Props> = props => {
         }
     };
 
-    const onScrollEventFrequencyMillis = 100;
-
     return (
-        <ScrollView scrollEventThrottle={onScrollEventFrequencyMillis} onScroll={scrollEvent =>
-            checkAtBottom(scrollEvent.nativeEvent.layoutMeasurement.height,
-                scrollEvent.nativeEvent.contentOffset.y,
-                scrollEvent.nativeEvent.contentSize.height)}>
 
-            {props.children}
-
-        </ScrollView>
+        <FlatList
+            style={style.container}
+            extraData={props.refreshOn}
+            numColumns={props.numCols ? props.numCols : 1}
+            data={props.data}
+            key={props.numCols}
+            keyExtractor={(_, index) => index.toString()}
+            onScroll={scrollEvent =>
+                checkAtBottom(scrollEvent.nativeEvent.layoutMeasurement.height,
+                    scrollEvent.nativeEvent.contentOffset.y,
+                    scrollEvent.nativeEvent.contentSize.height)}
+            renderItem={(item) => props.customRender(item.item)}
+        />
 
     )
 }
 
+const style = StyleSheet.create({
+    container : {
+        width : '100%'
+    }
+})
 
 export default InfiniteScrollView;

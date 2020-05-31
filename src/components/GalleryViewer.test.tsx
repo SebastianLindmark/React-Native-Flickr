@@ -4,10 +4,9 @@ import { View } from 'react-native';
 import GalleryViewer from './GalleryViewer';
 import EndlessScrollView from './InfiniteScrollView';
 import { WebImage } from './WebResult';
-import GalleryImage from './GalleryImage';
 
 
-const createImages = (): WebImage[] => {
+const createMockImages = (): WebImage[] => {
   return Array(5).map(_ => new WebImage('http://test.com'))
 }
 
@@ -17,7 +16,7 @@ describe("App", () => {
 
     let wrapper: ShallowWrapper;
 
-    const testImages = createImages()
+    const testImages = createMockImages()
 
     beforeEach(() => {
       wrapper = shallow(<GalleryViewer images={testImages} onScrollBottom={jest.fn()} />);
@@ -27,9 +26,7 @@ describe("App", () => {
       expect(wrapper.find(EndlessScrollView)).toHaveLength(1);
     });
 
-    it('should render multiple <GalleryImage />', () => {
-      expect(wrapper.find(View).at(1).prop('children')).toHaveLength(testImages.length);
-    })
+   
 
   });
 });
