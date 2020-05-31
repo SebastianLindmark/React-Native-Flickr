@@ -2,8 +2,8 @@ import { shallow, ShallowWrapper, mount, ReactWrapper, render } from 'enzyme';
 import React from 'react';
 import { View } from 'react-native';
 import GalleryViewer from './GalleryViewer';
-import EndlessScrollView from './InfiniteList';
-import { WebImage } from './WebResult';
+import EndlessScrollView from '../components/InfiniteList';
+import { WebImage } from '../components/WebResult';
 
 
 const createMockImages = (): WebImage[] => {

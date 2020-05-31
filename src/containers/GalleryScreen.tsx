@@ -3,7 +3,7 @@ import { Alert, ActivityIndicator, View, StyleSheet } from 'react-native'
 
 import { WebImageResult } from '../components/WebResult'
 import ImageSource from '../network/ImageSource';
-import GalleryViewer from '../components/GalleryViewer';
+import GalleryViewer from './GalleryViewer';
 import { TimeoutError, InvalidApiKeyError } from '../errors/CustomErrors';
 
 interface Props {

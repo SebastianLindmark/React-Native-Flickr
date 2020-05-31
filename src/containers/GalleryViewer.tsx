@@ -1,8 +1,8 @@
-import React, { ReactNode, ReactElement, useState } from 'react';
-import { Platform, Dimensions, View, StyleSheet } from 'react-native';
-import InfiniteList from "./InfiniteList";
-import { WebImage } from './WebResult';
-import GalleryImage from './GalleryImage';
+import React, { ReactElement, useState } from 'react';
+import { Dimensions, View, StyleSheet } from 'react-native';
+import InfiniteList from "../components/InfiniteList";
+import { WebImage } from '../components/WebResult';
+import GalleryImage from '../components/GalleryImage';
 
 
 interface Props {
@@ -27,10 +27,10 @@ const getScreenDimensions = () => {
 
 const GalleryViewer: React.FC<Props> = props => {
 
-    const [screenDimensions, setSceenDimensions] = useState(getScreenDimensions());
+    const [screenDimensions, setScreenDimensions] = useState(getScreenDimensions());
 
     const onLayoutHandle = () => {
-        setSceenDimensions(getScreenDimensions());
+        setScreenDimensions(getScreenDimensions());
     }
 
     const galleryImageRenderer = (child: WebImage): ReactElement => {
@@ -41,9 +41,10 @@ const GalleryViewer: React.FC<Props> = props => {
 
     return (
         <View style={styles.container} onLayout={onLayoutHandle}>
-            <InfiniteList refreshOn={screenDimensions}
-                numCols={calculateGalleryColumns(screenDimensions)}
+            <InfiniteList 
+                refreshOn={screenDimensions}
                 data={props.images}
+                numCols={calculateGalleryColumns(screenDimensions)}
                 customRender={galleryImageRenderer}
                 onBottomReached={props.onScrollBottom} />
         </View>
