@@ -11,11 +11,10 @@ interface Props {
     category: string
 }
 
-const initialState = new WebImageResult();
 
 const GalleryScreen: React.FC<Props> = props => {
 
-    const [imageResult, setImageResult] = useState<WebImageResult>(initialState);
+    const [imageResult, setImageResult] = useState<WebImageResult>(new WebImageResult());
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const isMounted = useRef(true);

@@ -63,9 +63,9 @@ const fetchImages = (category: string, offset: number): Promise<WebImageResult> 
 }
 
 const checkResponse = (response: Response): Promise<any> => {
-
+    console.log(response)
     if (!response.ok) {
-        Promise.reject("Unable to fetch images: " + response.text());
+        return Promise.reject("Unable to fetch images: " + response.text());
     }
 
     return response.json()
