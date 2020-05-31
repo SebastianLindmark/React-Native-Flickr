@@ -26,7 +26,7 @@ const GalleryScreen: React.FC<Props> = props => {
         }
     }, [error])
 
-    
+
     useEffect(() => {
         fetchImages(props.category, imageResult.offset);
         return () => { isMounted.current = false };
@@ -72,18 +72,22 @@ const GalleryScreen: React.FC<Props> = props => {
 
     return (
 
-        <View>
+        <View style={styles.container}>
             <View style={styles.centered}>
                 {isLoading && (<ActivityIndicator size="large" />)}
             </View>
             <GalleryViewer images={imageResult.images} onScrollBottom={onScrollBottom} />
         </View>
     );
-
 };
 
 
 const styles = StyleSheet.create({
+
+    container : {
+        flex : 1
+    },
+
     centered: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -92,7 +96,6 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         position: 'absolute',
-
     }
 })
 

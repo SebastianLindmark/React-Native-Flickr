@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, StatusBar , View } from 'react-native';
+import { StyleSheet, StatusBar , View, Platform } from 'react-native';
 
 import GalleryScreen from './src/containers/GalleryScreen';
 
@@ -8,7 +8,8 @@ import FlickrImageSource from './src/network/FlickrImageSource'
 
 export default function App() {
 
-    const containerStyle = {...styles.container, marginTop : StatusBar.currentHeight };
+    const height = Platform.OS === 'web' ? '100vh' : '100%'
+    const containerStyle = {...styles.container, marginTop : StatusBar.currentHeight, height };
 
 
     return (

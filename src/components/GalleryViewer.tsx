@@ -39,7 +39,7 @@ const GalleryViewer: React.FC<Props> = props => {
 
     return (
 
-        <View onLayout={onLayoutChange}>
+        <View style={styles.container} onLayout={onLayoutChange}>
             <InfiniteScrollView onBottomReached={props.onScrollBottom}>
                 <View style={styles.imageContainer}>
                     {props.images.map((image, idx) => <GalleryImage key={idx} url={image.url} width={imageWidth} height={imageHeight} />)}
@@ -50,6 +50,10 @@ const GalleryViewer: React.FC<Props> = props => {
 }
 
 const styles = StyleSheet.create({
+
+    container : {
+        flex : 1
+    },
 
     imageContainer: {
         flexDirection: 'row',
